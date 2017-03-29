@@ -4,6 +4,9 @@
  */
 ;(function(factory) {
     if (typeof define === 'function' && define['amd'])
+        if (window.ko) //knockout loaded as global
+            define(['require'], factory);
+        else
         define(['require', 'knockout'], factory);
     else
         window['ko-grid-bundle'] = factory(function (configName, handler) {
@@ -18,6 +21,8 @@
  * Copyright (c) 2015, Ben Schulz
  * License: BSD 3-clause (http://opensource.org/licenses/BSD-3-Clause)
  */
+//Try load knockout from Global, if not resolved as requirement
+if (knockout == undefined || knockout == null) knockout = window.ko;
 var onefold_js, onefold_lists, indexed_list, stringifyable, ko_data_source, ko_entry, onefold_dom, ko_indexed_repeat, ko_grid, ko_grid_aggregate, ko_grid_cell_navigation, ko_grid_column_sizing, ko_grid_column_resizing, ko_grid_view_modes, ko_grid_view_state_storage, ko_grid_column_scaling, ko_grid_column_width_persistence, ko_grid_editing, ko_grid_export, ko_grid_filtering, ko_grid_full_screen, ko_grid_paging, ko_grid_height_adjuster, ko_grid_links, ko_grid_resize_detection, ko_grid_selection, ko_grid_sorting, ko_grid_toolbar, ko_grid_virtualization, ko_grid_bundle_bundle, ko_grid_bundle;
 onefold_js = function () {
   var onefold_js_objects, onefold_js_arrays, onefold_js_strings, onefold_js_internal, onefold_js;
