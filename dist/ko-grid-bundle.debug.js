@@ -663,7 +663,7 @@ stringifyable = function (onefold_js) {
     return {
       propertyAccessor: function (propertyName) {
         var fn = function (owner) {
-          return owner[propertyName];
+           return propertyName.indexOf('.') == -1 ? owner[propertyName] : eval('owner.'+ propertyName);
         };
         makeFunction(fn);
         makeStringifyable(fn, function () {
@@ -3283,7 +3283,7 @@ ko_grid = function (onefold_dom, indexed_list, stringifyable, onefold_lists, one
         var context = ko.contextFor(cellElement);
         var row = context['row']();
         var column = context['column']();
-        var cell = row[column.property];
+        var cell = column.property.indexOf('.') == -1 ? row[column.property] : eval('row.'+ column.property);
         return [
           event,
           cell,
@@ -3471,7 +3471,7 @@ ko_grid = function (onefold_dom, indexed_list, stringifyable, onefold_lists, one
       init(element, row, column);
     }
     function updateCellElement(element, row, column) {
-      var cell = row[column.property];
+      var cell = column.property.indexOf('.') == -1 ? row[column.property] : eval('row.' + column.property);
       var hijacked = element[HIJACKED_KEY];
       // TODO since there may be thousands of cells we want to keep the dependency count at two (row+cell) => peek => need separate change handler for cellClasses
       var columnClasses = column.cellClasses.peek().join(' ');
@@ -4350,7 +4350,7 @@ ko_grid_cell_navigation = function (onefold_dom, indexed_list, stringifyable, on
           if (!dom.isOrContains(grid.rootElement, window.document.activeElement)) {
             var focussable = cell.element.querySelector('input, select, textarea');
             if (!focussable) {
-              focusParking.value = column.renderValue(ko.unwrap(row[column.property]));
+              focusParking.value = column.renderValue(ko.unwrap(column.property.indexOf('.') == -1 ? row[column.property] : eval('row.'+column.property)));
               focusParking.setSelectionRange(0, focusParking.value.length);
               focussable = focusParking;
             }
@@ -5035,7 +5035,7 @@ ko_grid_export = function (onefold_dom, stringifyable, indexed_list, onefold_lis
       }).then(function (values) {
         return values.map(function (value) {
           return '<tr>' + columns.map(function (c) {
-            return '<td>' + valueSelector(value[c.property]) + '</td>';
+            return '<td>' + valueSelector(c.property.indexOf('.') == -1 ? value[c.property] : eval('value.'+ c.property)) + '</td>';
           }).join('') + '</tr>';
         }).reduce(function (a, b) {
           return a + b;
@@ -5725,7 +5725,7 @@ ko_grid_sorting = function (onefold_dom, stringifyable, indexed_list, onefold_li
         function defaultComparator(column) {
           var propertyName = column.property;
           var accessor = function (row) {
-            return valueOf(row[propertyName]);
+              return valueOf(propertyName.indexOf('.') == -1 ? row[propertyName] : eval('row.'+ propertyName));
           };
           stringifyable.makeStringifyable(accessor, function () {
             return stringifyable.functions.propertyAccessor(column.property).stringifyable;
