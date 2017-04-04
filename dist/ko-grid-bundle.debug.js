@@ -3183,10 +3183,12 @@ ko_grid = function (onefold_dom, indexed_list, stringifyable, onefold_lists, one
         /** @type {de.benshu.ko.dataSource.DataSource<?, ?, ?>} */
         this.source = bindingValue['dataSource'];
         this.valueSelector = bindingValue['valueSelector'] || config['valueSelector'] || function (p) {
-          return p;
+          return ko.unwrap(p);
         };
         this['valueSelector'] = this.valueSelector;
-        this.observableValueSelector = bindingValue['observableValueSelector'] || config['observableValueSelector'] || this.valueSelector;
+        this.observableValueSelector = bindingValue['observableValueSelector'] || config['observableValueSelector'] || function (p) {
+          return p;
+        };
         this['observableValueSelector'] = this.observableValueSelector;
         this.predicates = ko.observableArray(bindingValue.filters || []);
         this['predicates'] = this.predicates;
