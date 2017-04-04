@@ -5640,6 +5640,7 @@ ko_grid_selection = function (onefold_dom, indexed_list, stringifyable, onefold_
         var evaluateRowClicks = !!(bindingValue['evaluateRowClicks'] || config['evaluateRowClicks']);
         var selectedEntriesIds = bindingValue['selectedEntriesIds'] || ko.observableArray([]);
         var selectedEntryId = bindingValue['selectedEntryId'] || ko.observable(null);
+        var cellDoubleClick = bindingValue['cellDoubleClick'];
         var allSelected = false;
         var column = grid.columns.add({
           key: 'selection',
@@ -5718,6 +5719,10 @@ ko_grid_selection = function (onefold_dom, indexed_list, stringifyable, onefold_
           grid.data.onCellClick(toggleEntrySelection);
         else
           grid.data.onCellClick('.' + SELECTION_CLASS, toggleEntrySelection);
+
+        if (cellDoubleClick)
+            grid.data.onCellDoubleClick(cellDoubleClick);
+
         grid.data.rows.installClassifier(function (row) {
           selectedEntriesIds();
           // track dependency
@@ -5725,6 +5730,7 @@ ko_grid_selection = function (onefold_dom, indexed_list, stringifyable, onefold_
         });
         var stateComputer = ko.computed(function () {
           var selectedEntryCount = selectedEntriesIds().length;
+          if (selectedEntryCount == 0) isSelected = {};
           var filteredSize = grid.data.view.filteredSize();
           selectedEntryId(selectedEntryCount ? selectedEntriesIds()[selectedEntryCount - 1] : null);
           // TODO This is /broken/! Two sets being of equal size does not imply they are equal.
