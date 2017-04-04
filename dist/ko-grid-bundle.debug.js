@@ -7,7 +7,7 @@
         if (window.ko) //knockout loaded as global
             define(['require'], factory);
         else
-        define(['require', 'knockout'], factory);
+            define(['require', 'knockout'], factory);
     else
         window['ko-grid-bundle'] = factory(function (configName, handler) {
                 if (!Array.isArray(configName) || configName.length !== 1 || typeof configName[0] !== 'string' || typeof handler !== 'function')
@@ -3187,7 +3187,7 @@ ko_grid = function (onefold_dom, indexed_list, stringifyable, onefold_lists, one
         };
         this['valueSelector'] = this.valueSelector;
         this.observableValueSelector = bindingValue['observableValueSelector'] || config['observableValueSelector'] || function (p) {
-          return p;
+           return p;
         };
         this['observableValueSelector'] = this.observableValueSelector;
         this.predicates = ko.observableArray(bindingValue.filters || []);
@@ -4151,12 +4151,12 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
     var extensionId = 'ko-grid-aggregate'.substr(0, 'ko-grid-aggregate'.indexOf('/')).substr(0, 'ko-grid-aggregate'.indexOf('/'));
     function renderNumber(value) {
       if (typeof value === 'number')
-      if (Math.abs(value) >= 1)
-        return value.toLocaleString();
-      else {
-        var firstNonZeroFractionDigit = -Math.floor(Math.log(value) / Math.log(10));
+        if (Math.abs(value) >= 1)
+           return value.toLocaleString();
+        else {
+           var firstNonZeroFractionDigit = -Math.floor(Math.log(value) / Math.log(10));
            return value.toLocaleString(undefined, { maximumFractionDigits: (value == 0 || isNaN(value)) ? 2 : firstNonZeroFractionDigit + 1 });
-      }
+        }
       return '' + value;
     }
     koGrid.defineExtension(extensionId, {
@@ -4347,7 +4347,7 @@ ko_grid_cell_navigation = function (onefold_dom, indexed_list, stringifyable, on
           case KEY_CODE_TAB:
             return move(0, multiplier, true);
           case KEY_CODE_ENTER:
-            return move(multiplier, 0);
+            return move(0, multiplier, true);
           }
         });
         /**
@@ -4370,6 +4370,14 @@ ko_grid_cell_navigation = function (onefold_dom, indexed_list, stringifyable, on
             newRowIndex += 1;
             newColIndex = 0;
           }
+
+          if (rowWise == 1 && grid.bindingValue.OnRowEnding && newRowIndex >= rows.length) {
+              grid.bindingValue.OnRowEnding();
+              setTimeout(function () {
+                  move(rowWise, columnWise, wrap);
+              }, 100);
+          }
+
           newColIndex = Math.max(0, Math.min(cols.length - 1, newColIndex));
           newRowIndex = Math.max(0, Math.min(rows.length - 1, newRowIndex));
           focus(rows.get(newRowIndex), cols[newColIndex]);
@@ -4385,7 +4393,16 @@ ko_grid_cell_navigation = function (onefold_dom, indexed_list, stringifyable, on
               focusParking.setSelectionRange(0, focusParking.value.length);
               focussable = focusParking;
             }
-            focussable.focus();
+            //Eduardo - Bug over Scroll in Chrome, when user gives an focus on cell editor
+            //https://bugs.chromium.org/p/chromium/issues/detail?id=682103
+            //https://bugs.chromium.org/p/chromium/issues/detail?id=681382
+            //https://bugs.chromium.org/p/chromium/issues/detail?id=675567
+            //https://bugs.chromium.org/p/chromium/issues/detail?id=664246
+            //Wait for bug final status, so we don't do a real focus for a while
+            var isChrome = !!window['chrome'];
+            if (!isChrome) {
+                focussable.focus();
+            }
           }
           scrollIntoView(cell.element);
         }
