@@ -4150,12 +4150,14 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
   ko_grid_aggregate_aggregate = function (module, ko, koGrid) {
     var extensionId = 'ko-grid-aggregate'.substr(0, 'ko-grid-aggregate'.indexOf('/')).substr(0, 'ko-grid-aggregate'.indexOf('/'));
     function renderNumber(value) {
+      if (typeof value === 'number')
       if (Math.abs(value) >= 1)
         return value.toLocaleString();
       else {
         var firstNonZeroFractionDigit = -Math.floor(Math.log(value) / Math.log(10));
-        return value.toLocaleString(undefined, { maximumFractionDigits: firstNonZeroFractionDigit + 1 });
+           return value.toLocaleString(undefined, { maximumFractionDigits: (value == 0 || isNaN(value)) ? 2 : firstNonZeroFractionDigit + 1 });
       }
+      return '' + value;
     }
     koGrid.defineExtension(extensionId, {
       initializer: function (template) {
