@@ -4193,7 +4193,7 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
               propertiesOfInterest.push(property);
           });
         });
-        var computeStatistics = config['statisticsComputer'] || computeStatisticsFromValuesStream;
+        var computeStatistics = config['statisticsComputer'] || computeStatisticsFromObservablesStream;
         var idCounter = 0;
         var computer = ko.computed(function () {
           grid.data.predicate();
@@ -4251,8 +4251,8 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
         };
       }
     });
-    var computeStatisticsFromValuesStream = function (grid, propertiesOfInterest) {
-      return grid.data.source.streamValues(function (q) {
+    var computeStatisticsFromObservablesStream = function (grid, propertiesOfInterest) {
+      return grid.data.source.streamObservables(function (q) {
         return q.filteredBy(grid.data.predicate);
       }).then(function (values) {
         var statistics = { count: 0 };
@@ -4263,17 +4263,20 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
             'sum': 0
           };
         });
-        return values.reduce(function (_, value) {
+        var promiseProcessedValues = values.reduce(function (_, value) {
           ++statistics.count;
           propertiesOfInterest.forEach(function (p) {
             var propertyStatistics = statistics[p];
-            var v = grid.data.valueSelector(value[p]);
+            var v = grid.data.valueSelector(p.indexOf('.') == -1 ? value[p] : eval('value.' + p));
+            if (typeof v === 'string')
+                 v = (v.trim() == "") ? 0 : isNaN(v) ? v.trim().length : parseFloat(v);
             propertyStatistics['minimum'] = Math.min(propertyStatistics['minimum'], v);
             propertyStatistics['maximum'] = Math.max(propertyStatistics['maximum'], v);
             propertyStatistics['sum'] += v;
           });
           return _;
         }, statistics);
+        return promiseProcessedValues;
       });
     };
     ko.bindingHandlers['__gridAggregate'] = {
