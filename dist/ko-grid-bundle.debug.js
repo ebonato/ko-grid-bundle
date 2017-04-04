@@ -4197,7 +4197,26 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
         var idCounter = 0;
         var computer = ko.computed(function () {
           grid.data.predicate();
-          grid.data.view.values();
+          grid.data.view.values(); //recalculates on new rows
+          var propertyNameParent = '';
+          var touchObservables = function (o) //touch observables recursively
+          {
+              Object.keys(o).forEach(function (p) {
+                  if (typeof o[p] === 'object') {
+                      if (o[p]) {
+                          propertyNameParent += p + '.';
+                          touchObservables(o[p]);
+                          propertyNameParent = propertyNameParent.replace(p + '.', '');
+                      }
+                  }
+                  else {
+                      if (ko.isObservable(o[p])) o[p](); //touch for recalculation on change
+                  }
+              });
+          }
+          grid.data.view.observables().forEach(function (observableRow) {
+              touchObservables(observableRow);
+          });
           return computeStatistics(grid, propertiesOfInterest).then(function (statistics) {
             var count = statistics.count;
             aggregateRows(bindingValue.map(function (aggregates) {
@@ -4211,7 +4230,7 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
                   row[columnId] = {
                     column: column,
                     aggregate: aggregate,
-                    value: count ? renderNumber(aggregate === 'average' ? statistics[property]['sum'] / count : statistics[property][aggregate]) : 'N/A'
+                    value: count ? renderNumber(aggregate === 'average' ? statistics[property]['sum'] / count : aggregate === 'count' ? count : statistics[property][aggregate]) : 'N/A'
                   };
                 } else {
                   row[columnId] = { column: column };
@@ -4221,6 +4240,11 @@ ko_grid_aggregate = function (onefold_dom, stringifyable, indexed_list, onefold_
             }));
             grid.layout.recalculate();
           });
+        }).extend({
+              rateLimit: {
+                  timeout: 500,
+                  method: "notifyWhenChangesStop"
+              }
         });
         this.dispose = function () {
           computer.dispose();
