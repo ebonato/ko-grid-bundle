@@ -3,7 +3,7 @@
   "main": "dist/ko-grid-bundle.js",
   "description": "A bundle of ko-grid and all its extensions, ko-data-source and ko-indexed-repeat.",
   "authors": [
-    "Ben Schulz (https://github.com/benschulz)"
+    "Ben Schulz (https://github.com/ebonato)"
   ],
   "license": "BSD-3-Clause",
   "keywords": [
@@ -12,32 +12,33 @@
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/benschulz/ko-grid-bundle.git"
+    "url": "http://github.com/ebonato/ko-grid-bundle.git"
   },
   "devDependencies": {
-    "ko-data-source": "benschulz/ko-data-source",
+    "ko-data-source": "ebonato/ko-data-source",
     "ko-entry": "benschulz/ko-entry",
-    "ko-grid": "benschulz/ko-grid",
-    "ko-grid-aggregate": "benschulz/ko-grid-aggregate",
-    "ko-grid-cell-navigation": "benschulz/ko-grid-cell-navigation",
+    "ko-grid": "ebonato/ko-grid",
+    "ko-grid-aggregate": "ebonato/ko-grid-aggregate",
+    "ko-grid-cell-navigation": "ebonato/ko-grid-cell-navigation",
     "ko-grid-column-resizing": "benschulz/ko-grid-column-resizing",
     "ko-grid-column-scaling": "benschulz/ko-grid-column-scaling",
     "ko-grid-column-sizing": "benschulz/ko-grid-column-sizing",
     "ko-grid-column-width-persistence": "benschulz/ko-grid-column-width-persistence",
     "ko-grid-editing": "benschulz/ko-grid-editing",
-    "ko-grid-export": "benschulz/ko-grid-export",
+    "ko-grid-export": "ebonato/ko-grid-export",
     "ko-grid-filtering": "benschulz/ko-grid-filtering",
     "ko-grid-full-screen": "benschulz/ko-grid-full-screen",
     "ko-grid-height-adjuster": "benschulz/ko-grid-height-adjuster",
     "ko-grid-links": "benschulz/ko-grid-links",
     "ko-grid-paging": "benschulz/ko-grid-paging",
     "ko-grid-resize-detection": "benschulz/ko-grid-resize-detection",
-    "ko-grid-selection": "benschulz/ko-grid-selection",
-    "ko-grid-sorting": "benschulz/ko-grid-sorting",
+    "ko-grid-selection": "ebonato/ko-grid-selection",
+    "ko-grid-sorting": "ebonato/ko-grid-sorting",
     "ko-grid-toolbar": "benschulz/ko-grid-toolbar",
     "ko-grid-view-modes": "benschulz/ko-grid-view-modes",
     "ko-grid-view-state-storage": "benschulz/ko-grid-view-state-storage",
     "ko-grid-virtualization": "benschulz/ko-grid-virtualization",
-    "ko-indexed-repeat": "benschulz/ko-indexed-repeat"
+    "ko-indexed-repeat": "benschulz/ko-indexed-repeat",
+	"ko-grid-data-refresh": "ebonato/ko-grid-data-refresh"
   }
 }
