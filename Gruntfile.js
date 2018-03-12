@@ -30,6 +30,7 @@ module.exports = function (grunt) {
             'bower_components/ko-grid-selection/dist/ko-grid-selection.debug.css',
             'bower_components/ko-grid-sorting/dist/ko-grid-sorting.debug.css',
             'bower_components/ko-grid-toolbar/dist/ko-grid-toolbar.debug.css',
+            'bower_components/ko-grid-data-refresh/dist/ko-grid-data-refresh.debug.css',
             'src/bundle.less'
         ]
     });

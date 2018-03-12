@@ -25,7 +25,8 @@ define(function (require) {
             'toolbar': require('ko-grid-toolbar'),
             'viewModes': require('ko-grid-view-modes'),
             'viewStateStorage': require('ko-grid-view-state-storage'),
-            'virtualization': require('ko-grid-virtualization')
+            'virtualization': require('ko-grid-virtualization'),
+            'dataRefresh': require('ko-grid-data-refresh')
         }
     };
 });
